@@ -118,7 +118,6 @@ function switchLanguage(lang) {
 
     document.body.style.fontFamily = data.font;
     
-    // 更新主體 UI
     document.getElementById('mainTitle').innerText = data.mainTitle;
     document.getElementById('descText').innerText = data.descText;
     document.getElementById('searchBtn').innerText = data.searchBtn;
@@ -128,13 +127,11 @@ function switchLanguage(lang) {
     document.getElementById('labelType').innerText = data.labelType;
     document.getElementById('labelLocation').innerText = data.labelLocation;
 
-    // 更新 Cookie 彈窗 UI
     document.getElementById('cookieTitle').innerText = data.cookieTitle;
     document.getElementById('cookieText').innerText = data.cookieText;
     document.getElementById('cookieAcceptBtn').innerText = data.cookieAccept;
     document.getElementById('cookieDeclineBtn').innerText = data.cookieDecline;
 
-    // 更新廣告預留框提示字
     const adStatus = document.getElementById('adStatusText');
     if (localStorage.getItem('royal_cookie_consent') === 'true') {
         adStatus.innerText = data.adLoading;
@@ -143,7 +140,7 @@ function switchLanguage(lang) {
     }
 }
 
-// 串接 FreeIPAPI.com 真實查詢邏輯
+// 串接 FreeIPAPI.com 查詢邏輯
 async function performIpLookup() {
     const currentLang = document.getElementById('langSelector').value;
     const langData = i18n[currentLang];
@@ -193,20 +190,20 @@ async function performIpLookup() {
 }
 
 /**
- * ⚡ 廣告加載模組
+ * ⚡ 廣告動態載入
  */
 function loadAdScripts() {
     const currentLang = document.getElementById('langSelector').value;
     document.getElementById('adStatusText').innerText = i18n[currentLang].adLoading;
 
-    // 1. Google AdSense 注入（替換為您的真實帳號 ID）
+    // 1. Google AdSense 
     const adsenseScript = document.createElement('script');
     adsenseScript.async = true;
     adsenseScript.src = 'https://googlesyndication.com';
     adsenseScript.crossOrigin = 'anonymous';
     document.head.appendChild(adsenseScript);
 
-    // 2. 協力廠商指定廣告指令碼注入
+    // 2. 第三方廣告
     const partnerScript = document.createElement('script');
     partnerScript.async = true;
     partnerScript.src = 'https://araplhn.org';
@@ -214,34 +211,47 @@ function loadAdScripts() {
 }
 
 /**
- * 📜 Cookie 隱私令狀彈窗控制邏輯
+ * 📜 處理隱私令狀與 LocalStorage 同意機制
  */
-function checkCookieConsent() {
-    const consent = localStorage.getItem('royal_cookie_consent');
-    const banner = document.getElementById('cookieBanner');
-
-    if (consent === 'true') {
-        // 如果之前已經敕准過，直接加載廣告
-        loadAdScripts();
-    } else if (consent === 'false') {
-        // 使用者拒絕，不載入廣告，維持外框靜態視覺
-        document.getElementById('adStatusText').style.display = 'block';
-    } else {
-        // 首造訪者，顯示隱私令狀彈窗
-        banner.classList.remove('hidden');
-    }
-}
-
-function acceptCookies(isAccepted) {
+function handleConsentResponse(isAccepted) {
     localStorage.setItem('royal_cookie_consent', isAccepted);
     document.getElementById('cookieBanner').classList.add('hidden');
-
     if (isAccepted) {
         loadAdScripts();
     }
 }
 
-// 網頁初始化載入
+function checkCookieConsent() {
+    const consent = localStorage.getItem('royal_cookie_consent');
+    const banner = document.getElementById('cookieBanner');
+
+    if (consent === 'true') {
+        loadAdScripts();
+    } else if (consent === 'false') {
+        document.getElementById('adStatusText').style.display = 'block';
+    } else {
+        // 沒有存取紀錄，解除 hidden 顯示彈窗
+        banner.classList.remove('hidden');
+    }
+}
+
+// 🏛️ 監聽 DOM 確保百分百綁定按鈕點擊事件
 window.addEventListener('DOMContentLoaded', () => {
+    // 綁定語言切換器
+    document.getElementById('langSelector').addEventListener('change', (e) => {
+        switchLanguage(e.target.value);
+    });
+
+    // 綁定 Cookie 同意按鈕
+    document.getElementById('cookieAcceptBtn').addEventListener('click', () => {
+        handleConsentResponse(true);
+    });
+
+    // 綁定 Cookie 拒絕按鈕
+    document.getElementById('cookieDeclineBtn').addEventListener('click', () => {
+        handleConsentResponse(false);
+    });
+
+    // 檢查 Cookie 狀態
     checkCookieConsent();
 });
