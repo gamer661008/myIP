@@ -1,32 +1,69 @@
-/* 皇家圖書館主體美學 */
+/* iOS 全域基礎樣式設定 */
 body {
-    background-color: #fcf9f2; /* 溫潤的明亮象牙白 */
-    color: #2c251e; /* 沉穩的墨水深棕 */
-    font-family: 'Noto Serif TC', 'Noto Serif', serif;
-}
-.royal-heading {
-    font-family: 'Cinzel', serif;
-}
-/* 羊皮紙微幅陰影與古典邊框 */
-.parchment-card {
-    background-color: #fffdf9;
-    border: 1px solid #e6dcbc;
-    box-shadow: 0 4px 20px rgba(44, 37, 30, 0.05);
-    position: relative;
-}
-/* 古典裝飾雙線條 */
-.double-border {
-    border: 4px double #c5a059;
+    background-color: #f2f2f7; /* iOS 系統淺灰背景色 */
+    color: #1c1c1e; /* iOS 主要文字深灰黑 */
+    /* 綁定 Apple 官方 SF Pro / 系統預設極簡黑體 */
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* 🏛️ 廣告預留外框（黃銅邊框、固定高度防 CLS 抖動） */
-.medieval-ad-container {
+/* iOS 高質感微陰影卡片 */
+.ios-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e5ea;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+}
+
+/* iOS 圓角膠囊控制列 */
+.ios-capsule {
+    background-color: rgba(235, 235, 245, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 9999px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* iOS 精緻細線條欄位 */
+.ios-list-row {
+    border-bottom: 1px solid #f2f2f7;
+}
+.ios-list-row:last-child {
+    border-bottom: none;
+}
+
+/* iOS 系統輸入框 */
+.ios-input {
+    background-color: #f2f2f7;
+    border: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+.ios-input:focus {
+    background-color: #ffffff;
+    border-color: #007aff; /* 經典蘋果天藍 */
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
+    outline: none;
+}
+
+/* iOS 經典實色按鈕 */
+.ios-btn-primary {
+    background-color: #007aff;
+    box-shadow: 0 2px 8px rgba(0, 122, 255, 0.25);
+    transition: all 0.2s ease;
+}
+.ios-btn-primary:hover {
+    background-color: #0066d6;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.35);
+}
+.ios-btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* iOS 靜態灰色廣告預留外框（高度固定防止抖動 CLS） */
+.ios-ad-container {
     width: 100%;
-    height: 250px; /* 固定高度，完全對應標準展示廣告 */
-    background-color: #fbf8f2;
-    border: 1px solid #dcd1b4;
-    outline: 3px double #c5a059; /* 黃銅古典滾邊效果 */
-    outline-offset: -6px;
+    height: 250px;
+    background-color: #fafafc;
+    border: 1px solid #e5e5ea;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -40,38 +77,37 @@ body {
     z-index: 0;
 }
 
-/* 📜 新增：底部常駐橫條型隱私令狀樣式 */
-.cookie-bottom-bar {
+/* 📱 iOS 常駐底部懸浮泡泡隱私列樣式 */
+.ios-cookie-banner {
     position: fixed;
-    bottom: 0;
+    bottom: 20px; /* 懸浮於螢幕底部，產生現代氣泡感 */
     left: 0;
     right: 0;
-    z-index: 100; /* 置於網頁所有元件之最上層 */
-    background-color: #fffdf9;
-    background-image: linear-gradient(rgba(244, 239, 227, 0.2) 1px, transparent 1px); /* 微弱手抄本紙張線條 */
-    background-size: 100% 20px;
-    border-top: 4px double #c5a059; /* 頂部裝飾標誌性的黃銅雙滾邊 */
-    box-shadow: 0 -4px 25px rgba(44, 37, 30, 0.1);
-    padding: 16px 24px;
+    z-index: 100;
+}
+.ios-cookie-card {
+    background-color: rgba(255, 255, 255, 0.85); /* 蘋果標誌性透明白 */
+    backdrop-filter: blur(20px); /* 強力高階毛玻璃霧面效果 */
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
 }
 
-/* 彈窗按鈕滑鼠懸停效果與游標形式優化 */
-#cookieDeclineBtn {
-    cursor: pointer;
-    transition: all 0.2s ease;
+/* iOS 系統內建按鈕美學 */
+.ios-btn-secondary {
+    background-color: #e5e5ea;
+    color: #007aff;
+    transition: all 0.15s ease;
 }
-#cookieDeclineBtn:hover {
-    background-color: #fcf9f2;
-    color: #2c251e;
+.ios-btn-secondary:hover {
+    background-color: #d1d1d6;
 }
 
-#cookieAcceptBtn {
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    transition: all 0.2s ease;
+.ios-btn-action {
+    background-color: #1c1c1e;
+    transition: all 0.15s ease;
 }
-#cookieAcceptBtn:hover {
-    background-color: #243f57;
-    border-color: #243f57;
-    transform: translateY(-1px);
+.ios-btn-action:hover {
+    background-color: #2c2c2e;
+    transform: translateY(-0.5px);
 }
