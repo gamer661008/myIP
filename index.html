@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Carrier & Network Lookup | Royal Academy</title>
+    <!-- 引入 Tailwind CSS 用於現代化佈局 -->
+    <script src="https://tailwindcss.com"></script>
+    <!-- 引入 Google Fonts：Cinzel (用於古典皇家大標), Noto Serif (用於典雅內文) -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- 引入分離的自訂 CSS 樣式檔 -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between py-8 px-4 sm:px-6 lg:px-8">
+
+    <!-- 頂部列：多國語言切換器 -->
+    <header class="max-w-4xl w-full mx-auto flex justify-end items-center mb-6">
+        <div class="flex items-center space-x-2 bg-[#f4eee1] px-3 py-1.5 rounded border border-[#e6dcbc]">
+            <span class="text-xs text-[#8c764d] royal-heading font-bold">📜 LINGUA :</span>
+            <select id="langSelector" onchange="switchLanguage(this.value)" class="bg-transparent text-sm text-[#2c251e] font-medium focus:outline-none cursor-pointer">
+                <option value="zh-TW">繁體中文</option>
+                <option value="zh-CN">簡體中文</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="ru">Русский</option>
+            </select>
+        </div>
+    </header>
+
+    <!-- 主體內容：皇家學士書房儀表板 -->
+    <main class="max-w-3xl w-full mx-auto parchment-card rounded-lg p-6 sm:p-10 double-border my-auto">
+        
+        <!-- 裝飾頂徽 -->
+        <div class="text-center mb-2">
+            <span class="text-2xl text-[#c5a059]">⚜️</span>
+        </div>
+
+        <!-- 標題區 -->
+        <div class="text-center mb-8 border-b border-[#e6dcbc] pb-6">
+            <p id="subTitle" class="text-xs tracking-widest text-[#8c764d] font-bold uppercase mb-1 royal-heading">IP Carrier & Network Lookup</p>
+            <h1 id="mainTitle" class="text-2xl sm:text-3xl font-bold text-[#1a2e40] tracking-wide">IP 網路情報查詢</h1>
+            <p id="descText" class="text-sm text-[#6e6151] mt-2 italic">快速解析 IP 位址之電信商、ASN 與連線類型</p>
+        </div>
+
+        <!-- 查詢輸入區 -->
+        <div class="mb-10 bg-[#fbf8f0] p-4 rounded border border-[#e6dcbc] flex flex-col sm:flex-row gap-3 items-center">
+            <div class="w-full relative">
+                <input type="text" id="ipInput" placeholder="e.g., 8.8.8.8" class="w-full bg-white border border-[#c5a059] px-4 py-2.5 text-base rounded shadow-inner focus:outline-none focus:ring-1 focus:ring-[#1a2e40] text-[#2c251e]">
+            </div>
+            <button id="searchBtn" onclick="performIpLookup()" class="w-full sm:w-auto bg-[#1a2e40] hover:bg-[#243f57] text-[#fffdf9] font-bold px-8 py-2.5 rounded shadow transition-all duration-300 whitespace-nowrap border border-[#1a2e40] tracking-wider">
+                查詢
+            </button>
+        </div>
+
+        <!-- 結果展示面板 (羊皮紙條目) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-8">
+            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
+                <span id="labelIp" class="font-bold text-[#6e6151] flex items-center">🔍 查詢 IP</span>
+                <span id="valIp" class="font-mono text-[#1a2e40] bg-[#f4eee1] px-2 py-0.5 rounded border border-[#e6dcbc] font-bold">--</span>
+            </div>
+
+            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
+                <span id="labelIsp" class="font-bold text-[#6e6151]">🏢 ISP / 營運商</span>
+                <span id="valIsp" class="text-[#2c251e] text-right font-medium">--</span>
+            </div>
+
+            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
+                <span id="labelAsn" class="font-bold text-[#6e6151]">📜 ASN (自主系統)</span>
+                <span id="valAsn" class="font-mono text-[#2c251e]">--</span>
+            </div>
+
+            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
+                <span id="labelType" class="font-bold text-[#6e6151]">⚡ 連線類型</span>
+                <span id="valType" class="text-[#2c251e] font-medium">--</span>
+            </div>
+
+            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center md:col-span-2">
+                <span id="labelLocation" class="font-bold text-[#6e6151]">📍 地理位置</span>
+                <span id="valLocation" class="text-[#2c251e] font-medium">--</span>
+            </div>
+        </div>
+
+        <!-- 🏛️ 中古黃銅裝飾風：廣告預留外框 (Ad Container) -->
+        <div class="medieval-ad-container my-6">
+            <div class="ad-placeholder-text">
+                <span class="text-xs block opacity-60 royal-heading tracking-widest">✦ CHRONICLE ADVERTISEMENT ✦</span>
+                <span id="adStatusText" class="text-[11px] italic opacity-40">正在等待皇家令狀許可...</span>
+            </div>
+            <!-- 真實廣告注入區（高度固定 250px，防止版面跳動） -->
+            <div id="realAdSlot" class="w-full h-full flex items-center justify-center">
+                <!-- 廣告指令碼會將廣告渲染於此 -->
+            </div>
+        </div>
+
+        <!-- 裝飾底紋 -->
+        <div class="text-center mt-8 pt-4 border-t border-[#f0e9d2]">
+            <span class="text-xs text-[#c5a059] tracking-widest royal-heading">✦ EX REGIA BIBLIOTHECA ✦</span>
+        </div>
+
+    </main>
+
+    <!-- 📜 皇家隱私令狀：Cookie 同意彈窗 -->
+    <div id="cookieBanner" class="cookie-banner-overlay hidden">
+        <div class="cookie-banner-card double-border p-6 max-w-xl w-full mx-4 shadow-2xl">
+            <div class="text-center text-xl mb-2 text-[#c5a059]">📜</div>
+            <h3 id="cookieTitle" class="text-center font-bold text-lg text-[#1a2e40] mb-3 royal-heading">皇家隱私令狀</h3>
+            <p id="cookieText" class="text-sm text-[#5c5043] leading-relaxed mb-5 text-center">
+                為了維持學者工具的正常運作，本圖書館使用 Cookie 記錄必要情報並提供適當的學術廣告。點選「接受」即代表您同意本令狀。
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                <button id="cookieDeclineBtn" onclick="acceptCookies(false)" class="px-5 py-2 text-xs font-medium border border-[#c5a059] text-[#8c764d] hover:bg-[#fcf9f2] rounded transition-all">
+                    拒絕令狀
+                </button>
+                <button id="cookieAcceptBtn" onclick="acceptCookies(true)" class="px-8 py-2 text-xs font-bold bg-[#1a2e40] text-[#fffdf9] hover:bg-[#243f57] rounded border border-[#1a2e40] transition-all tracking-wider shadow">
+                    敕准接受
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 頁尾 -->
+    <footer class="text-center text-xs text-[#8c764d] mt-6">
+        <p>© 2026 Royal Library Network Intelligence. All Academic Rights Reserved.</p>
+    </footer>
+
+    <!-- 引入分離的 JavaScript 邏輯檔 -->
+    <script src="script.js"></script>
+</body>
+</html>
