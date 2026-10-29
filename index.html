@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IP Carrier & Network Lookup | Royal Academy</title>
+    <title>IP Network Intelligence</title>
     <!-- 引入 Tailwind CSS 用於現代化佈局 -->
     <script src="https://tailwindcss.com"></script>
-    <!-- 引入 Google Fonts：Cinzel, Noto Serif -->
-    <link rel="preconnect" href="https://googleapis.com">
-    <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <link href="https://googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    <!-- 引入分離的自訂 CSS 樣式檔 -->
+    <!-- 引入外部自訂 CSS 樣式檔 -->
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between pt-8 pb-32 px-4 sm:px-6 lg:px-8">
+<body class="min-h-screen flex flex-col justify-between pt-6 pb-28 px-4 sm:px-6 lg:px-8">
 
-    <!-- 頂部列：多國語言切換器 -->
-    <header class="max-w-4xl w-full mx-auto flex justify-end items-center mb-6">
-        <div class="flex items-center space-x-2 bg-[#f4eee1] px-3 py-1.5 rounded border border-[#e6dcbc]">
-            <span class="text-xs text-[#8c764d] royal-heading font-bold">📜 LINGUA :</span>
-            <select id="langSelector" class="bg-transparent text-sm text-[#2c251e] font-medium focus:outline-none cursor-pointer">
+    <!-- 頂部列：多國語言切換器 (iOS 膠囊型 Segment 控制器風格) -->
+    <header class="max-w-4xl w-full mx-auto flex justify-end items-center mb-8">
+        <div class="ios-capsule flex items-center space-x-2 px-3 py-1.5">
+            <span class="text-[11px] font-semibold tracking-wider text-[#636366] uppercase font-sans">Language</span>
+            <select id="langSelector" class="bg-transparent text-sm text-[#1c1c1e] font-medium focus:outline-none cursor-pointer font-sans">
                 <option value="zh-TW">繁體中文</option>
                 <option value="zh-CN">簡體中文</option>
                 <option value="ja">日本語</option>
@@ -29,97 +25,92 @@
         </div>
     </header>
 
-    <!-- 主體內容：皇家學士書房儀表板 -->
-    <main class="max-w-3xl w-full mx-auto parchment-card rounded-lg p-6 sm:p-10 double-border my-auto">
-        <!-- 裝飾頂徽 -->
-        <div class="text-center mb-2">
-            <span class="text-2xl text-[#c5a059]">⚜️</span>
-        </div>
-
+    <!-- 主體內容：iOS 弧形磨砂儀表板 -->
+    <main class="max-w-2xl w-full mx-auto ios-card rounded-2xl p-6 sm:p-8 my-auto">
+        
         <!-- 標題區 -->
-        <div class="text-center mb-8 border-b border-[#e6dcbc] pb-6">
-            <p id="subTitle" class="text-xs tracking-widest text-[#8c764d] font-bold uppercase mb-1 royal-heading">IP Carrier & Network Lookup</p>
-            <h1 id="mainTitle" class="text-2xl sm:text-3xl font-bold text-[#1a2e40] tracking-wide">IP 網路情報查詢</h1>
-            <p id="descText" class="text-sm text-[#6e6151] mt-2 italic">快速解析 IP 位址之電信商、ASN 與連線類型</p>
+        <div class="text-center mb-8 border-b border-[#f2f2f7] pb-6">
+            <h1 id="mainTitle" class="text-xl sm:text-2xl font-bold tracking-tight text-[#1c1c1e] font-sans">IP 網路情報查詢</h1>
+            <p id="descText" class="text-xs text-[#8e8e93] mt-1.5 font-medium">快速解析 IP 位址之電信商、ASN 與連線類型</p>
         </div>
 
-        <!-- 查詢輸入區 -->
-        <div class="mb-10 bg-[#fbf8f0] p-4 rounded border border-[#e6dcbc] flex flex-col sm:flex-row gap-3 items-center">
-            <div class="w-full relative">
-                <input type="text" id="ipInput" placeholder="e.g., 8.8.8.8" class="w-full bg-white border border-[#c5a059] px-4 py-2.5 text-base rounded shadow-inner focus:outline-none focus:ring-1 focus:ring-[#1a2e40] text-[#2c251e]">
+        <!-- 查詢輸入區 (iOS 圓角輸入框與經典藍按鈕) -->
+        <div class="mb-8 flex flex-col sm:flex-row gap-3 items-center w-full">
+            <div class="w-full relative flex-1">
+                <input type="text" id="ipInput" placeholder="e.g., 8.8.8.8" class="w-full ios-input px-4 py-3 text-base rounded-xl text-[#1c1c1e] font-sans placeholder-[#aeaeb2]">
             </div>
-            <button id="searchBtn" class="w-full sm:w-auto bg-[#1a2e40] hover:bg-[#243f57] text-[#fffdf9] font-bold px-8 py-2.5 rounded shadow transition-all duration-300 whitespace-nowrap border border-[#1a2e40] tracking-wider">
+            <button id="searchBtn" class="w-full sm:w-auto ios-btn-primary text-white font-semibold px-8 py-3 rounded-xl transition-all duration-200 whitespace-nowrap font-sans text-sm tracking-wide">
                 查詢
             </button>
         </div>
 
-        <!-- 結果展示面板 -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-8">
-            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
-                <span id="labelIp" class="font-bold text-[#6e6151] flex items-center">🔍 查詢 IP</span>
-                <span id="valIp" class="font-mono text-[#1a2e40] bg-[#f4eee1] px-2 py-0.5 rounded border border-[#e6dcbc] font-bold">--</span>
+        <!-- 結果展示面板 (iOS 條列式 System List Rows) -->
+        <div class="flex flex-col space-y-0.5 text-sm mb-4">
+            
+            <div class="ios-list-row flex justify-between items-center py-3.5 px-1">
+                <span id="labelIp" class="font-medium text-[#3a3a3c]">🔍 查詢 IP</span>
+                <span id="valIp" class="font-mono text-[#007aff] font-semibold bg-[#e5f1ff] px-2.5 py-0.5 rounded-md text-xs">--</span>
             </div>
-            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
-                <span id="labelIsp" class="font-bold text-[#6e6151]">🏢 ISP / 營運商</span>
-                <span id="valIsp" class="text-[#2c251e] text-right font-medium">--</span>
+
+            <div class="ios-list-row flex justify-between items-center py-3.5 px-1">
+                <span id="labelIsp" class="font-medium text-[#3a3a3c]">🏢 ISP / 營運商</span>
+                <span id="valIsp" class="text-[#1c1c1e] font-medium text-right">--</span>
             </div>
-            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
-                <span id="labelAsn" class="font-bold text-[#6e6151]">📜 ASN (自主系統)</span>
-                <span id="valAsn" class="font-mono text-[#2c251e]">--</span>
+
+            <div class="ios-list-row flex justify-between items-center py-3.5 px-1">
+                <span id="labelAsn" class="font-medium text-[#3a3a3c]">📜 ASN (自主系統)</span>
+                <span id="valAsn" class="font-mono text-[#1c1c1e] bg-[#f2f2f7] px-2 py-0.5 rounded-md text-xs">--</span>
             </div>
-            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
-                <span id="labelType" class="font-bold text-[#6e6151]">⚡ 連線類型</span>
-                <span id="valType" class="text-[#2c251e] font-medium">--</span>
+
+            <div class="ios-list-row flex justify-between items-center py-3.5 px-1">
+                <span id="labelType" class="font-medium text-[#3a3a3c]">⚡ 連線類型</span>
+                <span id="valType" class="text-[#1c1c1e] font-medium">--</span>
             </div>
-            <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center md:col-span-2">
-                <span id="labelLocation" class="font-bold text-[#6e6151]">📍 地理位置</span>
-                <span id="valLocation" class="text-[#2c251e] font-medium">--</span>
+
+            <div class="ios-list-row flex justify-between items-center py-3.5 px-1 md:col-span-2">
+                <span id="labelLocation" class="font-medium text-[#3a3a3c]">📍 地理位置</span>
+                <span id="valLocation" class="text-[#1c1c1e] font-medium text-right">--</span>
             </div>
+
         </div>
 
-        <!-- 🏛️ 廣告預留外框 -->
-        <div class="medieval-ad-container my-6">
+        <!-- 🏛️ iOS 預留廣告框 (Ad Container)：改為精緻的極簡淺灰防 CLS 卡片 -->
+        <div class="ios-ad-container my-4 rounded-xl">
             <div class="ad-placeholder-text">
-                <span class="text-xs block opacity-60 royal-heading tracking-widest">✦ CHRONICLE ADVERTISEMENT ✦</span>
-                <span id="adStatusText" class="text-[11px] italic opacity-40">正在等待皇家令狀許可...</span>
+                <span class="text-[11px] block font-semibold text-[#8e8e93] tracking-wider font-sans uppercase">Advertisement</span>
+                <span id="adStatusText" class="text-[11px] text-[#aeaeb2]">正在等待令狀許可...</span>
             </div>
-            <div id="realAdSlot" class="w-full h-full flex items-center justify-center"></div>
+            <div id="realAdSlot" class="w-full h-full flex items-center justify-center z-10"></div>
         </div>
 
-        <!-- 裝飾底紋 -->
-        <div class="text-center mt-8 pt-4 border-t border-[#f0e9d2]">
-            <span class="text-xs text-[#c5a059] tracking-widest royal-heading">✦ EX REGIA BIBLIOTHECA ✦</span>
-        </div>
     </main>
 
-    <!-- 📜 【移至最下方】皇家隱私令狀：常駐底部橫條型 Cookie 同意列 -->
-    <div id="cookieBanner" class="cookie-bottom-bar hidden">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <!-- 左側/上方：古典紋飾標題與令狀內文 -->
+    <!-- 📜 iOS 橫條泡泡型隱私同意列 (Sticky Bottom Toast Bar) -->
+    <div id="cookieBanner" class="ios-cookie-banner hidden px-4 sm:px-6">
+        <div class="max-w-4xl mx-auto ios-cookie-card p-4 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-start space-x-3 text-left w-full md:w-3/5">
-                <span class="text-xl mt-0.5 select-none">📜</span>
+                <span class="text-xl mt-0.5 select-none">🛡️</span>
                 <div>
-                    <h3 id="cookieTitle" class="font-bold text-sm text-[#1a2e40] mb-0.5 royal-heading">皇家隱私令狀</h3>
-                    <p id="cookieText" class="text-xs text-[#5c5043] leading-relaxed">
-                        為了維持學者工具的正常運作，本圖書館使用 Cookie 記錄必要情報並提供適當的學術廣告。點選「接受」即代表您同意本令狀。
+                    <h3 id="cookieTitle" class="font-bold text-xs sm:text-sm text-[#1c1c1e] mb-0.5 font-sans">隱私權與 Cookie 聲明</h3>
+                    <p id="cookieText" class="text-[11px] sm:text-xs text-[#636366] leading-normal font-sans">
+                        為了維持工具的正常運作，本網站使用 Cookie 記錄必要情報並提供適當的學術廣告。點選「接受」即代表您同意此規範。
                     </p>
                 </div>
             </div>
-            <!-- 右側/下方：Tailwind 精美間距按鈕組 -->
-            <div class="flex items-center justify-end gap-3 w-full md:w-auto shrink-0 border-t md:border-t-0 pt-3 md:pt-0 border-[#e6dcbc]">
-                <button id="cookieDeclineBtn" class="px-4 py-2 text-xs font-medium border border-[#c5a059] text-[#8c764d] bg-white hover:bg-[#fcf9f2] rounded transition-all cursor-pointer whitespace-nowrap">
-                    拒絕令狀
+            <div class="flex items-center justify-end gap-3 w-full md:w-auto shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#f2f2f7]">
+                <button id="cookieDeclineBtn" class="ios-btn-secondary px-4 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer whitespace-nowrap font-sans">
+                    拒絕
                 </button>
-                <button id="cookieAcceptBtn" class="px-6 py-2 text-xs font-bold bg-[#1a2e40] text-[#fffdf9] hover:bg-[#243f57] rounded border border-[#1a2e40] transition-all tracking-wider shadow cursor-pointer whitespace-nowrap">
-                    敕准接受
+                <button id="cookieAcceptBtn" class="ios-btn-action px-6 py-2 text-xs font-bold text-white rounded-lg transition-all tracking-wide shadow-sm cursor-pointer whitespace-nowrap font-sans">
+                    接受
                 </button>
             </div>
         </div>
     </div>
 
     <!-- 頁尾 -->
-    <footer class="text-center text-xs text-[#8c764d] mt-6">
-        <p>© 2026 Royal Library Network Intelligence. All Academic Rights Reserved.</p>
+    <footer class="text-center text-[11px] text-[#8e8e93] font-medium mt-8 font-sans">
+        <p>© 2026 Network Intelligence. Designed in Alignment with iOS standards.</p>
     </footer>
 
     <!-- 引入外部控制腳本 -->
