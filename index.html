@@ -6,7 +6,7 @@
     <title>IP Carrier & Network Lookup | Royal Academy</title>
     <!-- 引入 Tailwind CSS 用於現代化佈局 -->
     <script src="https://tailwindcss.com"></script>
-    <!-- 引入 Google Fonts：Cinzel (用於古典皇家大標), Noto Serif (用於典雅內文) -->
+    <!-- 引入 Google Fonts：Cinzel, Noto Serif -->
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
     <link href="https://googleapis.com/css2?family=Cinzel:wght@500;700&family=Noto+Serif+JP:wght@400;700&family=Noto+Serif+KR:wght@400;700&family=Noto+Serif+SC:wght@400;700&family=Noto+Serif+TC:wght@400;700&family=Noto+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
     <header class="max-w-4xl w-full mx-auto flex justify-end items-center mb-6">
         <div class="flex items-center space-x-2 bg-[#f4eee1] px-3 py-1.5 rounded border border-[#e6dcbc]">
             <span class="text-xs text-[#8c764d] royal-heading font-bold">📜 LINGUA :</span>
-            <select id="langSelector" onchange="switchLanguage(this.value)" class="bg-transparent text-sm text-[#2c251e] font-medium focus:outline-none cursor-pointer">
+            <select id="langSelector" class="bg-transparent text-sm text-[#2c251e] font-medium focus:outline-none cursor-pointer">
                 <option value="zh-TW">繁體中文</option>
                 <option value="zh-CN">簡體中文</option>
                 <option value="ja">日本語</option>
@@ -31,7 +31,6 @@
 
     <!-- 主體內容：皇家學士書房儀表板 -->
     <main class="max-w-3xl w-full mx-auto parchment-card rounded-lg p-6 sm:p-10 double-border my-auto">
-        
         <!-- 裝飾頂徽 -->
         <div class="text-center mb-2">
             <span class="text-2xl text-[#c5a059]">⚜️</span>
@@ -49,71 +48,64 @@
             <div class="w-full relative">
                 <input type="text" id="ipInput" placeholder="e.g., 8.8.8.8" class="w-full bg-white border border-[#c5a059] px-4 py-2.5 text-base rounded shadow-inner focus:outline-none focus:ring-1 focus:ring-[#1a2e40] text-[#2c251e]">
             </div>
-            <button id="searchBtn" onclick="performIpLookup()" class="w-full sm:w-auto bg-[#1a2e40] hover:bg-[#243f57] text-[#fffdf9] font-bold px-8 py-2.5 rounded shadow transition-all duration-300 whitespace-nowrap border border-[#1a2e40] tracking-wider">
+            <button id="searchBtn" class="w-full sm:w-auto bg-[#1a2e40] hover:bg-[#243f57] text-[#fffdf9] font-bold px-8 py-2.5 rounded shadow transition-all duration-300 whitespace-nowrap border border-[#1a2e40] tracking-wider">
                 查詢
             </button>
         </div>
 
-        <!-- 結果展示面板 (羊皮紙條目) -->
+        <!-- 結果展示面板 -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-8">
             <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
                 <span id="labelIp" class="font-bold text-[#6e6151] flex items-center">🔍 查詢 IP</span>
                 <span id="valIp" class="font-mono text-[#1a2e40] bg-[#f4eee1] px-2 py-0.5 rounded border border-[#e6dcbc] font-bold">--</span>
             </div>
-
             <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
                 <span id="labelIsp" class="font-bold text-[#6e6151]">🏢 ISP / 營運商</span>
                 <span id="valIsp" class="text-[#2c251e] text-right font-medium">--</span>
             </div>
-
             <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
                 <span id="labelAsn" class="font-bold text-[#6e6151]">📜 ASN (自主系統)</span>
                 <span id="valAsn" class="font-mono text-[#2c251e]">--</span>
             </div>
-
             <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center">
                 <span id="labelType" class="font-bold text-[#6e6151]">⚡ 連線類型</span>
                 <span id="valType" class="text-[#2c251e] font-medium">--</span>
             </div>
-
             <div class="border-b border-[#f0e9d2] pb-3 flex justify-between items-center md:col-span-2">
                 <span id="labelLocation" class="font-bold text-[#6e6151]">📍 地理位置</span>
                 <span id="valLocation" class="text-[#2c251e] font-medium">--</span>
             </div>
         </div>
 
-        <!-- 🏛️ 中古黃銅裝飾風：廣告預留外框 (Ad Container) -->
+        <!-- 🏛️ 廣告預留外框 -->
         <div class="medieval-ad-container my-6">
             <div class="ad-placeholder-text">
                 <span class="text-xs block opacity-60 royal-heading tracking-widest">✦ CHRONICLE ADVERTISEMENT ✦</span>
                 <span id="adStatusText" class="text-[11px] italic opacity-40">正在等待皇家令狀許可...</span>
             </div>
-            <!-- 真實廣告注入區（高度固定 250px，防止版面跳動） -->
-            <div id="realAdSlot" class="w-full h-full flex items-center justify-center">
-                <!-- 廣告指令碼會將廣告渲染於此 -->
-            </div>
+            <div id="realAdSlot" class="w-full h-full flex items-center justify-center"></div>
         </div>
 
         <!-- 裝飾底紋 -->
         <div class="text-center mt-8 pt-4 border-t border-[#f0e9d2]">
             <span class="text-xs text-[#c5a059] tracking-widest royal-heading">✦ EX REGIA BIBLIOTHECA ✦</span>
         </div>
-
     </main>
 
     <!-- 📜 皇家隱私令狀：Cookie 同意彈窗 -->
     <div id="cookieBanner" class="cookie-banner-overlay hidden">
-        <div class="cookie-banner-card double-border p-6 max-w-xl w-full mx-4 shadow-2xl">
+        <div class="cookie-banner-card double-border p-6 max-w-xl w-full mx-4 shadow-2xl bg-[#fffdf9]">
             <div class="text-center text-xl mb-2 text-[#c5a059]">📜</div>
             <h3 id="cookieTitle" class="text-center font-bold text-lg text-[#1a2e40] mb-3 royal-heading">皇家隱私令狀</h3>
-            <p id="cookieText" class="text-sm text-[#5c5043] leading-relaxed mb-5 text-center">
+            <p id="cookieText" class="text-sm text-[#5c5043] leading-relaxed mb-6 text-center">
                 為了維持學者工具的正常運作，本圖書館使用 Cookie 記錄必要情報並提供適當的學術廣告。點選「接受」即代表您同意本令狀。
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-3">
-                <button id="cookieDeclineBtn" onclick="acceptCookies(false)" class="px-5 py-2 text-xs font-medium border border-[#c5a059] text-[#8c764d] hover:bg-[#fcf9f2] rounded transition-all">
+            <!-- 運用 Tailwind CSS 賦予按鈕精美排版與完美間距 -->
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="cookieDeclineBtn" class="w-full sm:w-auto px-6 py-2.5 text-sm font-medium border border-[#c5a059] text-[#8c764d] bg-white hover:bg-[#fcf9f2] rounded transition-all cursor-pointer">
                     拒絕令狀
                 </button>
-                <button id="cookieAcceptBtn" onclick="acceptCookies(true)" class="px-8 py-2 text-xs font-bold bg-[#1a2e40] text-[#fffdf9] hover:bg-[#243f57] rounded border border-[#1a2e40] transition-all tracking-wider shadow">
+                <button id="cookieAcceptBtn" class="w-full sm:w-auto px-10 py-2.5 text-sm font-bold bg-[#1a2e40] text-[#fffdf9] hover:bg-[#243f57] rounded border border-[#1a2e40] transition-all tracking-wider shadow cursor-pointer">
                     敕准接受
                 </button>
             </div>
@@ -125,7 +117,7 @@
         <p>© 2026 Royal Library Network Intelligence. All Academic Rights Reserved.</p>
     </footer>
 
-    <!-- 引入分離的 JavaScript 邏輯檔 -->
+    <!-- 📜 把腳本移到最底部載入，確保所有 HTML 元件都已在 DOM 中就緒 -->
     <script src="script.js"></script>
 </body>
 </html>
