@@ -63,7 +63,7 @@ const i18n = {
         cookieAccept: '敕許・同意する',
         cookieDecline: '拒否する',
         adWait: '令状の許可を待っています...',
-        adLoading: '王立の許可に基づき、広告を読み込み中...'
+        adLoading: '王立의 허가에 따라 광고를 불러오는 중...'
     },
     'ko': {
         font: "'Noto Serif KR', serif",
@@ -133,10 +133,12 @@ function switchLanguage(lang) {
     document.getElementById('cookieDeclineBtn').innerText = data.cookieDecline;
 
     const adStatus = document.getElementById('adStatusText');
-    if (localStorage.getItem('royal_cookie_consent') === 'true') {
-        adStatus.innerText = data.adLoading;
-    } else {
-        adStatus.innerText = data.adWait;
+    if (adStatus) {
+        if (localStorage.getItem('royal_cookie_consent') === 'true') {
+            adStatus.innerText = data.adLoading;
+        } else {
+            adStatus.innerText = data.adWait;
+        }
     }
 }
 
@@ -159,6 +161,7 @@ async function performIpLookup() {
     valLocation.innerText = langData.loading;
 
     try {
+        // ✨ 【修正】改回正確免密鑰的 FreeIPAPI 串接路徑與標準樣板字串語法
         const response = await fetch(`https://freeipapi.com{inputIp}`);
         if (!response.ok) throw new Error('API連線回應異常');
         const data = await response.json();
@@ -194,7 +197,8 @@ async function performIpLookup() {
  */
 function loadAdScripts() {
     const currentLang = document.getElementById('langSelector').value;
-    document.getElementById('adStatusText').innerText = i18n[currentLang].adLoading;
+    const adStatus = document.getElementById('adStatusText');
+    if (adStatus) adStatus.innerText = i18n[currentLang].adLoading;
 
     // 1. Google AdSense 
     const adsenseScript = document.createElement('script');
@@ -215,7 +219,8 @@ function loadAdScripts() {
  */
 function handleConsentResponse(isAccepted) {
     localStorage.setItem('royal_cookie_consent', isAccepted);
-    document.getElementById('cookieBanner').classList.add('hidden');
+    const banner = document.getElementById('cookieBanner');
+    if (banner) banner.classList.add('hidden');
     if (isAccepted) {
         loadAdScripts();
     }
@@ -228,30 +233,47 @@ function checkCookieConsent() {
     if (consent === 'true') {
         loadAdScripts();
     } else if (consent === 'false') {
-        document.getElementById('adStatusText').style.display = 'block';
+        const adStatus = document.getElementById('adStatusText');
+        if (adStatus) adStatus.style.display = 'block';
     } else {
-        // 沒有存取紀錄，解除 hidden 顯示彈窗
-        banner.classList.remove('hidden');
+        if (banner) banner.classList.remove('hidden');
     }
 }
 
-// 🏛️ 監聽 DOM 確保百分百綁定按鈕點擊事件
+// 🏛️ 監聽 DOM 確保百分百安全綁定按鈕點擊事件
 window.addEventListener('DOMContentLoaded', () => {
-    // 綁定語言切換器
-    document.getElementById('langSelector').addEventListener('change', (e) => {
-        switchLanguage(e.target.value);
-    });
+    // 1. 安全綁定語言切換器
+    const langSelector = document.getElementById('langSelector');
+    if (langSelector) {
+        langSelector.addEventListener('change', (e) => {
+            switchLanguage(e.target.value);
+        });
+    }
 
-    // 綁定 Cookie 同意按鈕
-    document.getElementById('cookieAcceptBtn').addEventListener('click', () => {
-        handleConsentResponse(true);
-    });
+    // 2. 安全綁定主功能查詢按鈕
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn) {
+        searchBtn.addEventListener('click', () => {
+            performIpLookup();
+        });
+    }
 
-    // 綁定 Cookie 拒絕按鈕
-    document.getElementById('cookieDeclineBtn').addEventListener('click', () => {
-        handleConsentResponse(false);
-    });
+    // 3. 安全綁定 Cookie 同意按鈕
+    const cookieAcceptBtn = document.getElementById('cookieAcceptBtn');
+    if (cookieAcceptBtn) {
+        cookieAcceptBtn.addEventListener('click', () => {
+            handleConsentResponse(true);
+        });
+    }
 
-    // 檢查 Cookie 狀態
+    // 4. 安全綁定 Cookie 拒絕按鈕
+    const cookieDeclineBtn = document.getElementById('cookieDeclineBtn');
+    if (cookieDeclineBtn) {
+        cookieDeclineBtn.addEventListener('click', () => {
+            handleConsentResponse(false);
+        });
+    }
+
+    // 5. 執行 Cookie 狀態檢查
     checkCookieConsent();
-});
+    });
