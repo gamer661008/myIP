@@ -40,7 +40,7 @@ body {
     z-index: 0;
 }
 
-/* 📜 Cookie 隱私令狀彈窗樣式 */
+/* 📜 Cookie 隱私令狀彈窗樣式 - 修正點擊層級 */
 .cookie-banner-overlay {
     position: fixed;
     bottom: 0;
@@ -52,10 +52,49 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 50;
+    z-index: 50; /* 確保遮罩在最上層 */
 }
+
+/* 修正：卡片本身與內部的按鈕要確保能被點擊（提高 z-index） */
 .cookie-banner-card {
     background-color: #fffdf9;
-    background-image: linear-gradient(rgba(244, 239, 227, 0.2) 1px, transparent 1px); /* 微弱的手抄本紙張線條感 */
-    background-size: 100% 24px;
+    position: relative;
+    z-index: 51; /* 必須高於遮罩的 50，滑鼠才點得到按鈕！ */
+    border-radius: 8px;
+}
+
+/* 👑 新增：為彈窗按鈕補上明亮典雅型中古美裝，並確保可用性 */
+#cookieDeclineBtn {
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    border: 1px solid #c5a059;
+    color: #8c764d;
+    background-color: #fffdf9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+#cookieDeclineBtn:hover {
+    background-color: #fcf9f2;
+    color: #2c251e;
+}
+
+#cookieAcceptBtn {
+    padding: 8px 32px;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #1a2e40;
+    color: #fffdf9;
+    border: 1px solid #1a2e40;
+    border-radius: 4px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+}
+#cookieAcceptBtn:hover {
+    background-color: #243f57;
+    border-color: #243f57;
+    transform: translateY(-1px);
 }
