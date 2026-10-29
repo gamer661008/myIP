@@ -165,11 +165,16 @@ async function performIpLookup() {
         if (!response.ok) throw new Error('API連線回應異常');
         const data = await response.json();
 
-        let connectionTypeDisplay = data.connectionType || '--';
-        if (connectionTypeDisplay.toLowerCase() === 'cellular') {
-            connectionTypeDisplay = langData.typeMobile;
-        } else if (connectionTypeDisplay.toLowerCase() === 'fixed') {
-            connectionTypeDisplay = langData.typeBroadband;
+        // 提高防禦性容錯，防止欄位為 null 時中斷
+        let connectionTypeDisplay = '--';
+        if (data && data.connectionType) {
+            if (data.connectionType.toLowerCase() === 'cellular') {
+                connectionTypeDisplay = langData.typeMobile;
+            } else if (data.connectionType.toLowerCase() === 'fixed') {
+                connectionTypeDisplay = langData.typeBroadband;
+            } else {
+                connectionTypeDisplay = data.connectionType;
+            }
         }
 
         valIp.innerText = data.ipAddress || 'Unknown';
@@ -190,6 +195,7 @@ async function performIpLookup() {
         valLocation.innerText = langData.error;
     }
 }
+
 
 /**
  * ⚡ 廣告動態載入
